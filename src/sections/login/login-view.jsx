@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,11 +9,10 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
-// import FormControl from '@mui/material/FormControl';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-// import { useRouter } from 'src/routes/hooks';
+import { useRouter } from 'src/routes/hooks';
 
 import { bgGradient } from 'src/theme/css';
 import { useLoginMutation } from 'src/api/auth-api-req';
@@ -23,30 +23,27 @@ import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
   const theme = useTheme();
-  const [login, data] = useLoginMutation();
+  const [login] = useLoginMutation();
+  const { register, handleSubmit } = useForm();
+  const router = useRouter();
 
-  // const router = useRouter();
-
-  useEffect(() => {
-    console.log(data?.data?.innerData?.usernameAndId);
-  }, [data]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // router.push('/');
-    const formData = new FormData(e.target);
-    const value = Object.fromEntries(formData.entries());
-    login(value);
+  const onSubmit = async (e) => {
+    await login(e)
+      .unwrap()
+      .then((res) => {
+        router.push('/');
+      });
   };
 
   const renderForm = (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit((e) => onSubmit(e))}>
       <Stack spacing={3}>
-        <TextField type="text" name="userName" label="Логин" />
+        <TextField type="text" {...register('login')} label="Логин" />
 
         <TextField
-          name="password"
+          {...register('password')}
           label="Пароль"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
@@ -97,7 +94,7 @@ export default function LoginView() {
 
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Йоки
+              Логин
             </Typography>
           </Divider>
 

@@ -15,6 +15,10 @@ export const fileApiReq = api.injectEndpoints({
         formData: true,
       }),
       invalidatesTags: ['UPLOADFILE'],
+      transformResponse: (res) => {
+        localStorage.setItem('file', JSON.stringify(res.innerData));
+        return res;
+      },
       transformErrorResponse: (err) => ErrorHandle(err),
     }),
     uploadFiles: builder.mutation({
@@ -25,9 +29,42 @@ export const fileApiReq = api.injectEndpoints({
         formData: true,
       }),
       invalidatesTags: ['UPLOADFILES'],
+      transformResponse: (res) => {
+        localStorage.setItem('files', JSON.stringify(res.innerData));
+        return res;
+      },
       transformErrorResponse: (err) => ErrorHandle(err),
+    }),
+    deleteFile: builder.mutation({
+      query: (id) => ({
+        url: `${FILE.DELETEFILE}`,
+        method: 'DELETE',
+        body: id,
+      }),
+      invalidatesTags: ['DELETEFILE'],
+      transformResponse: (res) => {
+        localStorage.removeItem('file');
+        return res;
+      },
+    }),
+    deleteFiles: builder.mutation({
+      query: (id) => ({
+        url: `${FILE.DELETEFILES}`,
+        method: 'DELETE',
+        body: id,
+      }),
+      invalidatesTags: ['DELETEFILES'],
+      transformResponse: (res) => {
+        localStorage.removeItem('files');
+        return res;
+      },
     }),
   }),
 });
 
-export const { useUploadFileMutation, useUploadFilesMutation } = fileApiReq;
+export const {
+  useUploadFileMutation,
+  useUploadFilesMutation,
+  useDeleteFileMutation,
+  useDeleteFilesMutation,
+} = fileApiReq;

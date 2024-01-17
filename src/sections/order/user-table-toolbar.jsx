@@ -33,7 +33,7 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Фойдаланувчини қидириш..."
+          placeholder="Буйуртани қидириш..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify

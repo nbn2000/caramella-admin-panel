@@ -1,10 +1,9 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable consistent-return */
 import propTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Button, Container, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Container, Typography } from '@mui/material';
 
 import { useUploadFileMutation, useUploadFilesMutation } from 'src/api/file-api-req';
 
@@ -12,9 +11,10 @@ import Iconify from 'src/components/iconify';
 
 import { PreviewImage } from './PreviewImage';
 
-export const RHFuploadImage = ({ multiple, showFiles, name }) => {
+export const RHFuploadImage = ({ multiple, name }) => {
   const [uploadFile] = useUploadFileMutation();
   const [uploadFiles] = useUploadFilesMutation();
+  const [loading, setLoading] = useState({ files: false, file: false });
   const {
     control,
     setError,
@@ -37,44 +37,39 @@ export const RHFuploadImage = ({ multiple, showFiles, name }) => {
     if (invalidFiles) {
       setError(name, {
         type: 'manual',
-        message: 'Invalid file type. Please select only image files (PNG, JPEG).',
+        message:
+          'Файл тури яроқсиз, Илтимос фақат шу (PNG, JPEG) расм форматдаги файларни танланг.',
       });
       return null;
     }
 
-    if (event?.target?.multiple) {
+    if (multiple.multiple) {
       setSelectedFiles([...files]);
       [...files].map((i) => formData.append('files', i));
+      setLoading({ file: loading.file, files: true });
+      const id = JSON.parse(localStorage.getItem('files'))?.id || null;
+      if (id !== null) formData.append('id', id);
       await uploadFiles(formData)
         .unwrap()
         .then((data) => {
-          setValue('files', data?.innerData);
+          setValue('files', data.innerData.url);
+          setLoading({ file: loading.file, files: false });
         });
     } else {
       setSelectedFiles([files[0]]);
+      const id = JSON.parse(localStorage.getItem('file'))?.id || null;
+      if (id !== null) formData.append('id', id);
       formData.append('file', files[0]);
+      setLoading({ file: true, files: loading.files });
       await uploadFile(formData)
         .unwrap()
         .then((data) => {
-          setValue('file', data?.innerData);
+          setValue('file', data.innerData.url);
+          setLoading({ file: false, files: loading.files });
         });
     }
+    return true;
   };
-
-  const handleDeleteImage = (e) => {
-    if (name === 'files') {
-      const newSelectedFiles = [...selectedFiles];
-      const newfiles = watch('files');
-      newfiles.splice(e, 1);
-      newSelectedFiles.splice(e, 1);
-      setSelectedFiles(newSelectedFiles);
-      setValue('files', newfiles);
-    } else if (name === 'file') {
-      setValue('file', '');
-      setSelectedFiles([]);
-    }
-  };
-
   return (
     <Controller
       control={control}
@@ -89,7 +84,13 @@ export const RHFuploadImage = ({ multiple, showFiles, name }) => {
           }}
         >
           {errors.files && <Typography color="red">{errors.files.message}</Typography>}
-          <Button type="button" variant="contained" component="label" sx={{ width: '100%' }}>
+          <LoadingButton
+            type="button"
+            variant="contained"
+            component="label"
+            loading={(loading.file && loading.file) || (loading.files && loading.files)}
+            sx={{ width: '100%' }}
+          >
             <input
               id="files"
               name="files"
@@ -99,16 +100,10 @@ export const RHFuploadImage = ({ multiple, showFiles, name }) => {
               style={{ display: 'none' }}
               onChange={handleFileChange}
             />
-            Upload Image
+            Расм Жойлаш
             <Iconify icon="ph:upload-fill" />
-          </Button>
-          <PreviewImage
-            watch={watch}
-            showFiles={showFiles}
-            selectedFiles={selectedFiles}
-            name={name}
-            handleDeleteImage={handleDeleteImage}
-          />
+          </LoadingButton>
+          <PreviewImage watch={watch} selectedFiles={selectedFiles} name={name} />
         </Container>
       )}
     />
@@ -117,6 +112,5 @@ export const RHFuploadImage = ({ multiple, showFiles, name }) => {
 
 RHFuploadImage.propTypes = {
   multiple: propTypes.object.isRequired,
-  showFiles: propTypes.object.isRequired,
   name: propTypes.string.isRequired,
 };

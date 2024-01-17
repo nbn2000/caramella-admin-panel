@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const BASE_URL =
@@ -17,7 +16,17 @@ const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['LOGIN', 'UPLOADFILE', 'UPLOADFILE', 'SIGNUP', 'EDITUSER', 'EDITCARD', 'ADDCARD'],
+  tagTypes: [
+    'LOGIN',
+    'UPLOADFILE',
+    'UPLOADFILE',
+    'SIGNUP',
+    'EDITUSER',
+    'EDITCARD',
+    'ADDCARD',
+    'DELETEFILE',
+    'DELETEFILES',
+  ],
   endpoints: () => ({}),
 });
 

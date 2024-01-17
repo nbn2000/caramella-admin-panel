@@ -1,4 +1,3 @@
-/* eslint-disable spaced-comment */
 import { ErrorHandle } from 'src/utils/handleErorrs';
 import { showUserMessage } from 'src/utils/showUserMessage';
 
@@ -17,25 +16,12 @@ export const authApiReq = api.injectEndpoints({
       invalidatesTags: (result, error) => (error ? [] : ['LOGIN']),
       transformErrorResponse: (err) => ErrorHandle(err),
       transformResponse: (res) => {
-        localStorage.setItem('user', JSON.stringify(res?.data?.innerData?.usernameAndId));
-        return res;
-      },
-    }),
-    signup: builder.mutation({
-      query: (body) => ({
-        url: `${AUTH.SIGNUP}`,
-        method: 'POST',
-        body,
-      }),
-      onSuccess: (data) => data,
-      transformErrorResponse: (err) => ErrorHandle(err),
-      transformResponse: (res) => {
+        localStorage.setItem('token', JSON.stringify(res.innerData.token));
         showUserMessage(res);
         return res;
       },
-      invalidatesTags: ['SIGNUP'],
     }),
   }),
 });
 
-export const { useLoginMutation, useSignupMutation } = authApiReq;
+export const { useLoginMutation } = authApiReq;

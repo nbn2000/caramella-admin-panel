@@ -8,7 +8,8 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { Box, Container, Typography } from '@mui/material';
 
-// import { useAddCardMutation } from 'src/api/add-card-api-req';
+import { useAddCardMutation } from 'src/api/card-api-req';
+import { useDeleteFileMutation, useDeleteFilesMutation } from 'src/api/file-api-req';
 
 import { RHFSelect, RHFTextField, RHFuploadImage } from 'src/components/hook-form';
 
@@ -44,7 +45,9 @@ function InputPrice() {
   return <RHFTextField name="price" label="Нархи" type="number" />;
 }
 export default function Form() {
-  // const [addCard, result] = useAddCardMutation();
+  const [deleteFile] = useDeleteFileMutation();
+  const [deleteFiles] = useDeleteFilesMutation();
+  const [addCard, result] = useAddCardMutation();
   // const navigate = useNavigate();
   const methods = useForm({
     defaultValues: {
@@ -59,16 +62,36 @@ export default function Form() {
     resolver: yupResolver(schema),
   });
 
+  /* WHEN USER USES UPLOAD FILE INPUT IT SETS THE VALUE OF FILE AND FILIES 
+  PROPERTIES IN THE USEFORM AND WHEN USER REFRESHES IT JUST RESETS 
+  TO DEFAULT BUT DATA IN THE BACKEND STAYS THERE THATS WHY WE NEED 
+  TO DELELE JUNKS FROM BACKEND TOO THEREFORE NEEDS THAT LOGIC IN THE USEEFFECT */
+  React.useEffect(() => {
+    const func = async () => {
+      const ids = JSON.parse(localStorage.getItem('files'))?.id || null;
+      const id = JSON.parse(localStorage.getItem('file'))?.id || null;
+      if (id !== null) {
+        await deleteFile({ id })
+          .unwrap()
+          .then((data) => console.log(data));
+      }
+      if (ids !== null) {
+        await deleteFiles({ id: ids })
+          .unwrap()
+          .then((data) => console.log(data));
+      }
+    };
+    func();
+  }, [deleteFile, deleteFiles]);
   const {
     handleSubmit,
     // reset,
     formState: { isSubmitting },
   } = methods;
   const onSubmit = async (data) => {
-    console.log(data);
-    // await addCard(data)
-    //   .unwrap()
-    //   .then((res) => console.log(res));
+    await addCard(data)
+      .unwrap()
+      .then((res) => console.log(res));
     // reset();
     // navigate('/products');
   };
@@ -106,24 +129,16 @@ export default function Form() {
             <Typography variant="h4" fontSize={12} align="center">
               Асосий Расми
             </Typography>
-            <RHFuploadImage
-              name="file"
-              multiple={{ multiple: false }}
-              showFiles={{ showFiles: true }}
-            />
+            <RHFuploadImage name="file" multiple={{ multiple: false }} />
             <Typography variant="h4" fontSize={12} align="center">
               Қолган Расмлари
             </Typography>
-            <RHFuploadImage
-              name="files"
-              multiple={{ multiple: true }}
-              showFiles={{ showFiles: true }}
-            />
+            <RHFuploadImage name="files" multiple={{ multiple: true }} />
             <LoadingButton
               type="submit"
               variant="contained"
               fullwidth="true"
-              // loading={result.isLoading}
+              loading={result.isLoading}
               size="large"
               color="success"
               disabled={isSubmitting}

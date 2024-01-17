@@ -43,8 +43,8 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
     <Stack spacing={1}>
       <Typography variant="subtitle2">Тоифалар</Typography>
       <RadioGroup>
-        {CATEGORY_OPTIONS.map((item) => (
-          <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
+        {CATEGORY_OPTIONS.map((item, idx) => (
+          <FormControlLabel key={idx} value={item} control={<Radio />} label={item} />
         ))}
       </RadioGroup>
     </Stack>
@@ -54,13 +54,8 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
     <Stack spacing={1}>
       <Typography variant="subtitle2">Нархлар</Typography>
       <RadioGroup>
-        {PRICE_OPTIONS.map((item) => (
-          <FormControlLabel
-            key={item.value}
-            value={item.value}
-            control={<Radio />}
-            label={item.label}
-          />
+        {PRICE_OPTIONS.map((item, idx) => (
+          <FormControlLabel key={idx} value={item.value} control={<Radio />} label={item.label} />
         ))}
       </RadioGroup>
     </Stack>

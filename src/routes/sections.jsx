@@ -13,11 +13,12 @@ export const EditCard = lazy(() => import('src/pages/edit-card'));
 export const VacancyPage = lazy(() => import('src/pages/vacancy'));
 export const EditVacancyPage = lazy(() => import('src/pages/edit-vacancy'));
 export const AddnewVacancyPage = lazy(() => import('src/pages/add-vacancy'));
+export const OrderPage = lazy(() => import('src/pages/order'));
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  const auth = true;
+  const auth = localStorage.getItem('token') || false;
 
   const routes = [
     {
@@ -37,6 +38,7 @@ export default function Router() {
         { path: 'vacancy', element: <VacancyPage /> },
         { path: 'vacancy/:id', element: <EditVacancyPage /> },
         { path: 'vacancy/add-new-vacancy', element: <AddnewVacancyPage /> },
+        { path: 'order', element: <OrderPage /> },
       ],
     },
     {

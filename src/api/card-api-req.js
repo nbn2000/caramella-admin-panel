@@ -3,14 +3,14 @@ import { ErrorHandle } from 'src/utils/handleErorrs';
 import { showUserMessage } from 'src/utils/showUserMessage';
 
 import api from './index';
-import { ADDNEWCARD } from './urls';
+import { CARD } from './urls';
 
 // auth api
 export const cardApiReq = api.injectEndpoints({
   endpoints: (builder) => ({
     addCard: builder.mutation({
       query: (body) => ({
-        url: `${ADDNEWCARD.ADDCARD}`,
+        url: `${CARD.ADDCARD}`,
         method: 'POST',
         body,
       }),
@@ -22,7 +22,13 @@ export const cardApiReq = api.injectEndpoints({
       },
       invalidatesTags: ['ADDCARD'],
     }),
+    getAllCards: builder.query({
+      query: (body) => ({
+        url: `${CARD.GETALLCARD}`,
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useAddCardMutation } = cardApiReq;
+export const { useAddCardMutation, useGetAllCardsQuery } = cardApiReq;

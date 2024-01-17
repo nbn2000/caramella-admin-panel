@@ -1,12 +1,13 @@
 /* eslint-disable spaced-comment */
 export const AUTH = {
-  LOGIN: '/signin',
-  SIGNUP: '/signup',
+  LOGIN: '/admin/login',
 };
 
 export const FILE = {
-  FILES: '/upload/files',
-  FILE: '/upload/file',
+  FILES: '/edit/images',
+  FILE: '/edit/image',
+  DELETEFILE: '/delete/image',
+  DELETEFILES: '/delete/images',
 };
 
 export const DYNAMICURL = {
@@ -14,6 +15,7 @@ export const DYNAMICURL = {
   CARD: '/card-edit/', //IT TAKES ID
 };
 
-export const ADDNEWCARD = {
-  ADDCARD: '/add-card',
+export const CARD = {
+  ADDCARD: '/add/card',
+  GETALLCARD: '/getall/card',
 };

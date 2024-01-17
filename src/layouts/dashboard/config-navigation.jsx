@@ -8,6 +8,11 @@ const icon = (name) => (
 
 const navConfig = [
   {
+    title: 'Буйуртмалар',
+    path: '/order',
+    icon: icon('ic_order'),
+  },
+  {
     title: 'Фойдаланувчилар',
     path: '/user',
     icon: icon('ic_user'),

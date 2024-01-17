@@ -21,9 +21,7 @@ import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-// ----------------------------------------------------------------------
-
-export default function UserPage() {
+export default function ProductsView() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -109,7 +107,7 @@ export default function UserPage() {
         onAgree={onAgree}
       />
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Фойдаланувчилар</Typography>
+        <Typography variant="h4">Буюуртмалар</Typography>
       </Stack>
 
       <Card>
